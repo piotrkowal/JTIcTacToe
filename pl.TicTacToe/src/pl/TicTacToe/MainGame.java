@@ -17,10 +17,12 @@ public class MainGame {
 		for (int j = 0; j < 3; j++) {
 			for (int i = 0; i < 3; i++) {
 				gameBoard[i][j] = String.valueOf(counter);
+
 				HashMap<String, Integer> mapToPutIntoCoords = new HashMap<String, Integer>();
 				mapToPutIntoCoords.put("x", i);
 				mapToPutIntoCoords.put("y", j);
 				coordsOfNum.put(counter, mapToPutIntoCoords);
+
 				availableNums.add(counter);
 				counter++;
 			}
@@ -33,7 +35,7 @@ public class MainGame {
 		playerSymbols.put(0, "X");
 		playerSymbols.put(1, "O");
 		int currentPlayer = 0;
-
+		int playerWon = -1;
 		while (!endGame) {
 			for (int j = 0; j < 3; j++) {
 				for (int i = 0; i < 3; i++) {
@@ -41,6 +43,8 @@ public class MainGame {
 				}
 				System.out.println("");
 			}
+			if (availableNums.size() < 1)
+				break;
 			System.out.println("Player's " + (currentPlayer + 1) + " turn");
 			int playerChoice = reader.nextInt();
 
@@ -50,15 +54,23 @@ public class MainGame {
 					playerChoice = reader.nextInt();
 				} while (availableNums.indexOf(playerChoice) == -1);
 			}
-			int varToFilter = playerChoice;
-			availableNums = availableNums.stream().filter(num -> num != varToFilter).collect(Collectors.toList());
+
+			int numToFilterOut = playerChoice;
+			availableNums = availableNums.stream().filter(num -> num != numToFilterOut).collect(Collectors.toList());
 
 			int xCoord = coordsOfNum.get(playerChoice).get("x");
 			int yCoord = coordsOfNum.get(playerChoice).get("y");
-
 			gameBoard[xCoord][yCoord] = playerSymbols.get(currentPlayer);
+
 			currentPlayer = currentPlayer == 0 ? 1 : 0;
 		}
 
+		if (playerWon == -1) {
+			System.out.println("All cells have been marked; No one wins!");
+		} else {
+			System.out.println("Player " + playerWon + " wins!");
+		}
+
+		reader.close();
 	}
 }
