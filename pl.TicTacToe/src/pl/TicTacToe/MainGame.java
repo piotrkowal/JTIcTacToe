@@ -2,15 +2,17 @@ package pl.TicTacToe;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 public class MainGame {
 
 	public static void main(String[] args) {
 		String[][] gameBoard = new String[3][3];
 		Map<Integer, HashMap<String, Integer>> coordsOfNum = new HashMap<Integer, HashMap<String, Integer>>();
-		ArrayList<Integer> availableNums = new ArrayList<Integer>();
+		List<Integer> availableNums = new ArrayList<Integer>();
 		int counter = 1;
 		for (int j = 0; j < 3; j++) {
 			for (int i = 0; i < 3; i++) {
@@ -19,9 +21,11 @@ public class MainGame {
 				mapToPutIntoCoords.put("x", i);
 				mapToPutIntoCoords.put("y", j);
 				coordsOfNum.put(counter, mapToPutIntoCoords);
+				availableNums.add(counter);
 				counter++;
 			}
 		}
+
 		boolean endGame = false;
 		Scanner reader = new Scanner(System.in);
 
@@ -29,7 +33,7 @@ public class MainGame {
 		playerSymbols.put(0, "X");
 		playerSymbols.put(1, "O");
 		int currentPlayer = 0;
-		int playerChoice;
+
 		while (!endGame) {
 			for (int j = 0; j < 3; j++) {
 				for (int i = 0; i < 3; i++) {
@@ -37,9 +41,17 @@ public class MainGame {
 				}
 				System.out.println("");
 			}
-
 			System.out.println("Player's " + (currentPlayer + 1) + " turn");
-			playerChoice = reader.nextInt();
+			int playerChoice = reader.nextInt();
+
+			if (availableNums.indexOf(playerChoice) == -1) {
+				do {
+					System.out.println("Choose cell that was't already marked!");
+					playerChoice = reader.nextInt();
+				} while (availableNums.indexOf(playerChoice) == -1);
+			}
+			int varToFilter = playerChoice;
+			availableNums = availableNums.stream().filter(num -> num != varToFilter).collect(Collectors.toList());
 
 			int xCoord = coordsOfNum.get(playerChoice).get("x");
 			int yCoord = coordsOfNum.get(playerChoice).get("y");
