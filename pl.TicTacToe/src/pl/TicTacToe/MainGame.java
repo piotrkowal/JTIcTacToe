@@ -10,7 +10,8 @@ import java.util.stream.Collectors;
 public class MainGame {
 
 	public static void main(String[] args) {
-		String[][] gameBoard = new String[3][3];
+		int gameBoardSize = 3;
+		String[][] gameBoard = new String[gameBoardSize][gameBoardSize];
 		Map<Integer, HashMap<String, Integer>> coordsOfNum = new HashMap<Integer, HashMap<String, Integer>>();
 		List<Integer> availableNums = new ArrayList<Integer>();
 		int counter = 1;
@@ -43,7 +44,7 @@ public class MainGame {
 				}
 				System.out.println("");
 			}
-			if (availableNums.size() < 1)
+			if (availableNums.isEmpty())
 				break;
 			System.out.println("Player's " + (currentPlayer + 1) + " turn");
 			int playerChoice = reader.nextInt();
@@ -61,7 +62,24 @@ public class MainGame {
 			int xCoord = coordsOfNum.get(playerChoice).get("x");
 			int yCoord = coordsOfNum.get(playerChoice).get("y");
 			gameBoard[xCoord][yCoord] = playerSymbols.get(currentPlayer);
-
+			
+			boolean hasMatch = false;
+			
+				for(int j=0;j<gameBoardSize;j++) {
+					hasMatch = hasMatch || (gameBoard[0][j] == gameBoard[1][j] && gameBoard[1][j] == gameBoard[2][j]); 
+				}
+			
+				for(int i=0;i<gameBoardSize;i++) {
+					hasMatch = hasMatch || (gameBoard[i][0] == gameBoard[i][1] && gameBoard[i][1] == gameBoard[i][2]); 
+				}
+				
+				hasMatch = hasMatch || (gameBoard[0][0] == gameBoard[1][1] && gameBoard[1][1]==gameBoard[2][2]);
+				hasMatch = hasMatch || (gameBoard[0][2] == gameBoard[1][1] && gameBoard[1][1]==gameBoard[2][0]);
+			
+			if(hasMatch) {
+				playerWon = currentPlayer+1;
+				endGame = true;
+			}
 			currentPlayer = currentPlayer == 0 ? 1 : 0;
 		}
 
