@@ -25,5 +25,21 @@ public class TicTacToeBoard {
 		this.playerSymbols.put(1, "O");
 	}
 
+	public void setUpBoard() {
+		int counter = 1;
+		for (int j = 0; j < 3; j++) {
+			for (int i = 0; i < 3; i++) {
+				this.gameBoard[i][j] = String.valueOf(counter);
+
+				HashMap<String, Integer> mapToPutIntoCoords = new HashMap<String, Integer>();
+				mapToPutIntoCoords.put("x", i);
+				mapToPutIntoCoords.put("y", j);
+				this.coordsOfNum.put(counter, mapToPutIntoCoords);
+
+				availableNums.add(counter);
+				counter++;
+			}
+		}
+	}
 
 }
